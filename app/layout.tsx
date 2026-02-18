@@ -4,8 +4,14 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-const playfair = Playfair_Display({ subsets: ['greek', 'latin'], variable: '--font-serif' });
-const inter = Inter({ subsets: ['greek', 'latin'], variable: '--font-sans' });
+const playfair = Playfair_Display({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-serif'
+});
+const inter = Inter({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-sans'
+});
 
 export const metadata: Metadata = {
   title: 'Πολιτιστικός Σύλλογος Μέσης',
