@@ -1,6 +1,4 @@
-// import dbConnect from '@/lib/dbConnect';
-// import Article from '@/models/Article';
-import { mockArticles } from '@/lib/mockData';
+import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -9,25 +7,23 @@ import * as motion from 'framer-motion/client';
 
 export const dynamic = 'force-dynamic';
 
-async function getArticle(id: string) {
-    // await dbConnect();
-    // try {
-    //     const article = await Article.findById(id).lean();
-    //     if (!article) return null;
-    //     return article;
-    // } catch (error) {
-    //     return null;
-    // }
-
-    const article = mockArticles.find(a => a._id === id);
-    return Promise.resolve(article || null);
+async function getArticle(slug: string) {
+    try {
+        const article = await prisma.article.findUnique({
+            where: { slug },
+            include: { author: true },
+        });
+        return article;
+    } catch (error) {
+        return null;
+    }
 }
 
 export default async function SingleArticlePage(props: {
-    params: Promise<{ id: string }>;
+    params: Promise<{ slug: string }>;
 }) {
     const params = await props.params;
-    const article = await getArticle(params.id);
+    const article = await getArticle(params.slug);
 
     if (!article) {
         notFound();
@@ -59,14 +55,18 @@ export default async function SingleArticlePage(props: {
                     <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl font-serif text-[var(--primary)]">
                         {article.title}
                     </h1>
-                    <p className="text-muted-foreground">
-                        Δημοσιεύτηκε στις {new Date(article.createdAt).toLocaleDateString('el-GR', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                        })}
-                    </p>
+                    <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
+                        <p>
+                            Δημοσιεύτηκε στις {new Date(article.createdAt).toLocaleDateString('el-GR', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                            })}
+                        </p>
+                        <span className="hidden sm:inline">•</span>
+                        <p>Συντάκτης: {article.author.name}</p>
+                    </div>
                 </motion.header>
 
                 <motion.div

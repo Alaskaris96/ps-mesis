@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-// import dbConnect from '@/lib/dbConnect';
-// import Article from '@/models/Article';
-import { mockArticles } from '@/lib/mockData';
+import prisma from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
@@ -13,26 +11,27 @@ import * as motion from 'framer-motion/client';
 export const dynamic = 'force-dynamic';
 
 async function getArticles(query: string) {
-    // await dbConnect();
-    // const filter = query 
-    //   ? { 
-    //       $or: [
-    //         { title: { $regex: query, $options: 'i' } },
-    //         { content: { $regex: query, $options: 'i' } }
-    //       ]
-    //     }
-    //   : {};
+    try {
+        const where = query
+            ? {
+                OR: [
+                    { title: { contains: query, mode: 'insensitive' as const } },
+                    { content: { contains: query, mode: 'insensitive' as const } },
+                ],
+            }
+            : {};
 
-    // return Article.find(filter).sort({ createdAt: -1 }).lean();
+        const articles = await prisma.article.findMany({
+            where,
+            include: { author: true },
+            orderBy: { createdAt: 'desc' },
+        });
 
-    if (!query) return Promise.resolve(mockArticles);
-
-    const lowerQuery = query.toLowerCase();
-    const filtered = mockArticles.filter(a =>
-        a.title.toLowerCase().includes(lowerQuery) ||
-        a.content.toLowerCase().includes(lowerQuery)
-    );
-    return Promise.resolve(filtered);
+        return articles;
+    } catch (error) {
+        console.error('Error fetching articles:', error);
+        return [];
+    }
 }
 
 const containerVariants = {
@@ -86,8 +85,8 @@ export default async function NewsPage(props: {
                     animate="visible"
                     className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-8"
                 >
-                    {articles.map((article: any) => (
-                        <motion.div key={article._id.toString()} variants={itemVariants}>
+                    {articles.map((article) => (
+                        <motion.div key={article.id} variants={itemVariants}>
                             <Card className="flex flex-col overflow-hidden hover:shadow-lg transition-all border-primary/20 h-full">
                                 <div className="relative aspect-video w-full overflow-hidden">
                                     <img
@@ -100,13 +99,18 @@ export default async function NewsPage(props: {
                                     <CardTitle className="line-clamp-2 text-lg font-serif text-[var(--primary)]">
                                         {article.title}
                                     </CardTitle>
-                                    <p className="text-xs text-muted-foreground mt-2">
-                                        {new Date(article.createdAt).toLocaleDateString('el-GR', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric',
-                                        })}
-                                    </p>
+                                    <div className="flex justify-between items-center mt-2">
+                                        <p className="text-xs text-muted-foreground">
+                                            {new Date(article.createdAt).toLocaleDateString('el-GR', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric',
+                                            })}
+                                        </p>
+                                        <p className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                                            {article.author.name}
+                                        </p>
+                                    </div>
                                 </CardHeader>
                                 <CardContent className="flex-1">
                                     <p className="text-sm text-muted-foreground line-clamp-3">
@@ -114,7 +118,7 @@ export default async function NewsPage(props: {
                                     </p>
                                 </CardContent>
                                 <div className="p-6 pt-0 mt-auto">
-                                    <Link href={`/news/${article._id.toString()}`}>
+                                    <Link href={`/news/${article.slug}`}>
                                         <Button variant="outline" className="w-full group">
                                             Διαβάστε Περισσότερα
                                             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

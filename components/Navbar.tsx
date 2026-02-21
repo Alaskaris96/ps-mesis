@@ -4,11 +4,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import * as motion from 'framer-motion/client'; // Keep using the client proxy if that's how it is set up, or switch to standard import if problematic. Assuming it works.
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
-export default function Navbar() {
+export default function Navbar({ user }: { user: any }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        router.push('/login');
+        router.refresh();
+    };
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -17,7 +25,6 @@ export default function Navbar() {
         { href: "/news", label: "Νέα" },
         { href: "/history", label: "Ιστορία" },
         { href: "/family-tree", label: "Γενεαλογικό Δέντρο" },
-        { href: "/admin", label: "Διαχείριση" },
     ];
 
     return (
@@ -55,6 +62,12 @@ export default function Navbar() {
                             {link.label}
                         </Link>
                     ))}
+                    {user && (
+                        <Button variant="ghost" size="sm" onClick={handleLogout} className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 font-medium ml-4">
+                            <LogOut className="h-4 w-4" />
+                            Αποσύνδεση
+                        </Button>
+                    )}
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -79,6 +92,12 @@ export default function Navbar() {
                                 {link.label}
                             </Link>
                         ))}
+                        {user && (
+                            <Button variant="ghost" className="justify-start px-0 text-red-600 hover:text-red-700 hover:bg-transparent" onClick={() => { setIsMenuOpen(false); handleLogout(); }}>
+                                <LogOut className="mr-2 h-4 w-4" />
+                                Αποσύνδεση
+                            </Button>
+                        )}
                     </div>
                 </div>
             )}

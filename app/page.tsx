@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-// import dbConnect from '@/lib/dbConnect';
-// import Article from '@/models/Article';
-import { mockArticles } from '@/lib/mockData';
+import prisma from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
@@ -12,10 +10,16 @@ import * as motion from 'framer-motion/client';
 export const dynamic = 'force-dynamic';
 
 async function getLatestArticles() {
-  // await dbConnect();
-  // Lean returns plain JS objects, easier for serialization
-  // return Article.find({}).sort({ createdAt: -1 }).limit(3).lean(); 
-  return Promise.resolve(mockArticles.slice(0, 3));
+  try {
+    return await prisma.article.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+      include: { author: true }
+    });
+  } catch (error) {
+    console.error('Error fetching latest articles:', error);
+    return [];
+  }
 }
 
 const containerVariants = {
@@ -80,10 +84,10 @@ export default async function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="mt-8"
+            className="mt-8 gap-4 flex flex-wrap justify-center"
           >
             <Link href="/news">
-              <Button size="lg" className="font-semibold">
+              <Button size="lg" className="font-semibold shadow-md">
                 Δείτε τα Νέα μας
               </Button>
             </Link>
@@ -115,9 +119,9 @@ export default async function Home() {
             viewport={{ once: true }}
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {articles.map((article: any) => (
-              <motion.div key={article._id.toString()} variants={itemVariants}>
-                <Card className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow border-primary/20 h-full">
+            {articles.map((article) => (
+              <motion.div key={article.id} variants={itemVariants}>
+                <Card className="flex flex-col overflow-hidden hover:shadow-lg transition-all border-primary/20 h-full">
                   <div className="relative aspect-video w-full overflow-hidden">
                     <img
                       src={article.imageUrl || '/placeholder.svg'}
@@ -129,13 +133,18 @@ export default async function Home() {
                     <CardTitle className="line-clamp-2 text-xl font-serif text-[var(--primary)]">
                       {article.title}
                     </CardTitle>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {new Date(article.createdAt).toLocaleDateString('el-GR', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </p>
+                    <div className="flex justify-between items-center mt-2">
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(article.createdAt).toLocaleDateString('el-GR', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </p>
+                      <p className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                        {article.author.name}
+                      </p>
+                    </div>
                   </CardHeader>
                   <CardContent className="flex-1">
                     <p className="text-sm text-muted-foreground line-clamp-3">
@@ -143,7 +152,7 @@ export default async function Home() {
                     </p>
                   </CardContent>
                   <div className="p-6 pt-0 mt-auto">
-                    <Link href={`/news/${article._id.toString()}`}>
+                    <Link href={`/news/${article.slug}`}>
                       <Button variant="outline" className="w-full group">
                         Διαβάστε Περισσότερα
                         <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
