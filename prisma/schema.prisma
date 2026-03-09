@@ -35,3 +35,16 @@ model Article {
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
 }
+
+model Person {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  birthDate String
+  deathDate String?
+  isLiving  Boolean  @default(true)
+  parents   Person[] @relation("ParentChild")
+  children  Person[] @relation("ParentChild")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

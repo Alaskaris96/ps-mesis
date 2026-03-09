@@ -24,7 +24,7 @@ export default function Navbar({ user }: { user: any }) {
         { href: "/", label: "Αρχική" },
         { href: "/news", label: "Νέα" },
         { href: "/history", label: "Ιστορία" },
-        { href: "/family-tree", label: "Γενεαλογικό Δέντρο" },
+        // { href: "/family-tree", label: "Γενεαλογικό Δέντρο" },
     ];
 
     return (

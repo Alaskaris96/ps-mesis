@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, memo } from 'react';
+/*
 import ReactFlow, {
     Background,
     Controls,
@@ -171,9 +172,12 @@ const FamilyNode = memo(({ data, isConnectable }: any) => {
 const nodeTypes = {
     custom: FamilyNode,
 };
+*/
 
 // --- Main Page Component ---
 export default function FamilyTreePage() {
+    return null;
+    /*
     const [people, setPeople] = useState<Person[]>(INITIAL_PEOPLE);
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -323,104 +327,105 @@ export default function FamilyTreePage() {
     return (
         <div className="h-[calc(100vh-5rem)] bg-muted/30 dark:bg-zinc-950 flex flex-col overflow-hidden">
             {/* Header */}
-            <div className="p-4 bg-background/80 backdrop-blur-md border-b flex justify-between items-center z-10 shrink-0 h-16">
-                <div>
-                    <h1 className="text-lg md:text-xl font-serif font-bold text-primary">Γενεαλογικό Δέντρο</h1>
-                    <p className="text-xs text-muted-foreground">{people.length} Άτομα</p>
-                </div>
-                <Button onClick={() => { setSelectedPerson(null); setNewPerson({ firstName: '', lastName: '', birthDate: '', deathDate: '', isLiving: true }); setIsAddChildModalOpen(true); }} size="sm">
-                    <Plus className="w-4 h-4 md:mr-2" /> <span className="hidden md:inline">Προσθήκη Ιδρυτή</span>
-                </Button>
+<div className="p-4 bg-background/80 backdrop-blur-md border-b flex justify-between items-center z-10 shrink-0 h-16">
+    <div>
+        <h1 className="text-lg md:text-xl font-serif font-bold text-primary">Γενεαλογικό Δέντρο</h1>
+        <p className="text-xs text-muted-foreground">{people.length} Άτομα</p>
+    </div>
+    <Button onClick={() => { setSelectedPerson(null); setNewPerson({ firstName: '', lastName: '', birthDate: '', deathDate: '', isLiving: true }); setIsAddChildModalOpen(true); }} size="sm">
+        <Plus className="w-4 h-4 md:mr-2" /> <span className="hidden md:inline">Προσθήκη Ιδρυτή</span>
+    </Button>
+</div>
+
+{/* React Flow Canvas */ }
+<div className="flex-1 w-full h-full">
+    <ReactFlowProvider>
+        <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            nodeTypes={nodeTypes}
+            fitView
+            minZoom={0.1}
+            maxZoom={2}
+            attributionPosition="bottom-left"
+        >
+            <Controls />
+            <MiniMap
+                nodeColor="#B8860B"
+                maskColor="rgba(0, 0, 0, 0.1)"
+                className="bg-background border rounded-lg shadow-lg"
+            />
+            <Background gap={20} size={1} />
+        </ReactFlow>
+    </ReactFlowProvider>
+</div>
+
+{/* --- Modals (Reused Logic) --- */ }
+{/* Edit Modal */ }
+<Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+    <DialogContent>
+        <DialogHeader><DialogTitle>Επεξεργασία Προφίλ</DialogTitle></DialogHeader>
+        <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2"><Label>Όνομα</Label><Input value={selectedPerson?.firstName || ''} onChange={(e) => setSelectedPerson(prev => prev ? { ...prev, firstName: e.target.value } : null)} /></div>
+                <div className="space-y-2"><Label>Επώνυμο</Label><Input value={selectedPerson?.lastName || ''} onChange={(e) => setSelectedPerson(prev => prev ? { ...prev, lastName: e.target.value } : null)} /></div>
             </div>
-
-            {/* React Flow Canvas */}
-            <div className="flex-1 w-full h-full">
-                <ReactFlowProvider>
-                    <ReactFlow
-                        nodes={nodes}
-                        edges={edges}
-                        onNodesChange={onNodesChange}
-                        onEdgesChange={onEdgesChange}
-                        nodeTypes={nodeTypes}
-                        fitView
-                        minZoom={0.1}
-                        maxZoom={2}
-                        attributionPosition="bottom-left"
-                    >
-                        <Controls />
-                        <MiniMap
-                            nodeColor="#B8860B"
-                            maskColor="rgba(0, 0, 0, 0.1)"
-                            className="bg-background border rounded-lg shadow-lg"
-                        />
-                        <Background gap={20} size={1} />
-                    </ReactFlow>
-                </ReactFlowProvider>
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2"><Label>Έτος Γέννησης</Label><Input value={selectedPerson?.birthDate || ''} onChange={(e) => setSelectedPerson(prev => prev ? { ...prev, birthDate: e.target.value } : null)} /></div>
+                <div className="space-y-2"><Label>Έτος Θανάτου</Label><Input disabled={selectedPerson?.isLiving} value={selectedPerson?.deathDate || ''} onChange={(e) => setSelectedPerson(prev => prev ? { ...prev, deathDate: e.target.value } : null)} /></div>
             </div>
-
-            {/* --- Modals (Reused Logic) --- */}
-            {/* Edit Modal */}
-            <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-                <DialogContent>
-                    <DialogHeader><DialogTitle>Επεξεργασία Προφίλ</DialogTitle></DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2"><Label>Όνομα</Label><Input value={selectedPerson?.firstName || ''} onChange={(e) => setSelectedPerson(prev => prev ? { ...prev, firstName: e.target.value } : null)} /></div>
-                            <div className="space-y-2"><Label>Επώνυμο</Label><Input value={selectedPerson?.lastName || ''} onChange={(e) => setSelectedPerson(prev => prev ? { ...prev, lastName: e.target.value } : null)} /></div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2"><Label>Έτος Γέννησης</Label><Input value={selectedPerson?.birthDate || ''} onChange={(e) => setSelectedPerson(prev => prev ? { ...prev, birthDate: e.target.value } : null)} /></div>
-                            <div className="space-y-2"><Label>Έτος Θανάτου</Label><Input disabled={selectedPerson?.isLiving} value={selectedPerson?.deathDate || ''} onChange={(e) => setSelectedPerson(prev => prev ? { ...prev, deathDate: e.target.value } : null)} /></div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <input type="checkbox" checked={selectedPerson?.isLiving} onChange={(e) => setSelectedPerson(prev => prev ? { ...prev, isLiving: e.target.checked } : null)} />
-                            <Label>Εν Ζωή</Label>
-                        </div>
-                    </div>
-                    <DialogFooter><Button onClick={saveEditPerson}>Αποθήκευση</Button></DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* Add Child Modal */}
-            <Dialog open={isAddChildModalOpen} onOpenChange={setIsAddChildModalOpen}>
-                <DialogContent>
-                    <DialogHeader><DialogTitle>{selectedPerson ? `Προσθήκη Τέκνου` : 'Προσθήκη Ιδρυτή'}</DialogTitle></DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2"><Label>Όνομα</Label><Input value={newPerson.firstName} onChange={(e) => setNewPerson({ ...newPerson, firstName: e.target.value })} /></div>
-                            <div className="space-y-2"><Label>Επώνυμο</Label><Input value={newPerson.lastName} onChange={(e) => setNewPerson({ ...newPerson, lastName: e.target.value })} /></div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2"><Label>Έτος Γέννησης</Label><Input value={newPerson.birthDate} onChange={(e) => setNewPerson({ ...newPerson, birthDate: e.target.value })} /></div>
-                            <div className="space-y-2"><Label>Έτος Θανάτου</Label><Input disabled={newPerson.isLiving} value={newPerson.deathDate} onChange={(e) => setNewPerson({ ...newPerson, deathDate: e.target.value })} /></div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <input type="checkbox" checked={newPerson.isLiving} onChange={(e) => setNewPerson({ ...newPerson, isLiving: e.target.checked })} />
-                            <Label>Εν Ζωή</Label>
-                        </div>
-                    </div>
-                    <DialogFooter><Button onClick={saveNewPerson}>Προσθήκη</Button></DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* Connect Modal */}
-            <Dialog open={isConnectModalOpen} onOpenChange={setIsConnectModalOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Σύνδεση με Υπάρχον Προφίλ</DialogTitle>
-                        <DialogDescription>Επιλέξτε παιδί για τον/την {selectedPerson?.firstName}</DialogDescription>
-                    </DialogHeader>
-                    <div className="max-h-[300px] overflow-y-auto space-y-2 p-2">
-                        {people
-                            .filter(p => !p.parents.includes(selectedPerson?._id || '') && p._id !== selectedPerson?._id)
-                            .map(p => (
-                                <Button key={p._id} variant="outline" className="w-full justify-start" onClick={() => saveConnection(p._id)}>
-                                    {p.firstName} {p.lastName} ({p.birthDate})
-                                </Button>
-                            ))}
-                    </div>
-                </DialogContent>
-            </Dialog>
+            <div className="flex items-center gap-2">
+                <input type="checkbox" checked={selectedPerson?.isLiving} onChange={(e) => setSelectedPerson(prev => prev ? { ...prev, isLiving: e.target.checked } : null)} />
+                <Label>Εν Ζωή</Label>
+            </div>
         </div>
+        <DialogFooter><Button onClick={saveEditPerson}>Αποθήκευση</Button></DialogFooter>
+    </DialogContent>
+</Dialog>
+
+{/* Add Child Modal */ }
+<Dialog open={isAddChildModalOpen} onOpenChange={setIsAddChildModalOpen}>
+    <DialogContent>
+        <DialogHeader><DialogTitle>{selectedPerson ? `Προσθήκη Τέκνου` : 'Προσθήκη Ιδρυτή'}</DialogTitle></DialogHeader>
+        <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2"><Label>Όνομα</Label><Input value={newPerson.firstName} onChange={(e) => setNewPerson({ ...newPerson, firstName: e.target.value })} /></div>
+                <div className="space-y-2"><Label>Επώνυμο</Label><Input value={newPerson.lastName} onChange={(e) => setNewPerson({ ...newPerson, lastName: e.target.value })} /></div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2"><Label>Έτος Γέννησης</Label><Input value={newPerson.birthDate} onChange={(e) => setNewPerson({ ...newPerson, birthDate: e.target.value })} /></div>
+                <div className="space-y-2"><Label>Έτος Θανάτου</Label><Input disabled={newPerson.isLiving} value={newPerson.deathDate} onChange={(e) => setNewPerson({ ...newPerson, deathDate: e.target.value })} /></div>
+            </div>
+            <div className="flex items-center gap-2">
+                <input type="checkbox" checked={newPerson.isLiving} onChange={(e) => setNewPerson({ ...newPerson, isLiving: e.target.checked })} />
+                <Label>Εν Ζωή</Label>
+            </div>
+        </div>
+        <DialogFooter><Button onClick={saveNewPerson}>Προσθήκη</Button></DialogFooter>
+    </DialogContent>
+</Dialog>
+
+{/* Connect Modal */ }
+<Dialog open={isConnectModalOpen} onOpenChange={setIsConnectModalOpen}>
+    <DialogContent>
+        <DialogHeader>
+            <DialogTitle>Σύνδεση με Υπάρχον Προφίλ</DialogTitle>
+            <DialogDescription>Επιλέξτε παιδί για τον/την {selectedPerson?.firstName}</DialogDescription>
+        </DialogHeader>
+        <div className="max-h-[300px] overflow-y-auto space-y-2 p-2">
+            {people
+                .filter(p => !p.parents.includes(selectedPerson?._id || '') && p._id !== selectedPerson?._id)
+                .map(p => (
+                    <Button key={p._id} variant="outline" className="w-full justify-start" onClick={() => saveConnection(p._id)}>
+                        {p.firstName} {p.lastName} ({p.birthDate})
+                    </Button>
+                ))}
+        </div>
+    </DialogContent>
+</Dialog>
+        </div >
     );
+    */
 }

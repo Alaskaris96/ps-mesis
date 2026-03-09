@@ -1,36 +1,60 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import Person from '@/models/Person';
+import prisma from '@/lib/prisma';
 
 export async function GET() {
     try {
-        await dbConnect();
-        const people = await Person.find({});
-        return NextResponse.json(people);
+        const people = await prisma.person.findMany({
+            include: {
+                parents: true,
+                children: true,
+            }
+        });
+
+        // Map to match frontend expectations (using _id and ID arrays)
+        const formattedPeople = people.map(p => ({
+            ...p,
+            _id: p.id,
+            parents: p.parents.map(parent => parent.id),
+            children: p.children.map(child => child.id),
+        }));
+
+        return NextResponse.json(formattedPeople);
     } catch (error) {
+        console.error('Failed to fetch people:', error);
         return NextResponse.json({ error: 'Failed to fetch people' }, { status: 500 });
     }
 }
 
 export async function POST(request: Request) {
     try {
-        await dbConnect();
         const data = await request.json();
-        const person = await Person.create(data);
 
-        // If there's a parentId, update the parent's children array
-        if (data.parentId) {
-            await Person.findByIdAndUpdate(data.parentId, {
-                $push: { children: person._id }
-            });
-            // Also update person's parents array
-            await Person.findByIdAndUpdate(person._id, {
-                $push: { parents: data.parentId }
-            });
-        }
+        // Extract connection info
+        const { parentId, ...personData } = data;
 
-        return NextResponse.json(person);
+        const person = await prisma.person.create({
+            data: {
+                ...personData,
+                firstName: personData.firstName || '',
+                lastName: personData.lastName || '',
+                birthDate: personData.birthDate || '',
+                isLiving: personData.isLiving !== undefined ? personData.isLiving : true,
+                parents: parentId ? { connect: { id: parentId } } : undefined,
+            },
+            include: {
+                parents: true,
+                children: true,
+            }
+        });
+
+        return NextResponse.json({
+            ...person,
+            _id: person.id,
+            parents: person.parents.map(p => p.id),
+            children: person.children.map(c => c.id),
+        });
     } catch (error) {
+        console.error('Failed to create person:', error);
         return NextResponse.json({ error: 'Failed to create person' }, { status: 500 });
     }
 }
