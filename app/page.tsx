@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import * as motion from 'framer-motion/client';
+import { LogoCarousel } from '@/components/LogoCarousel';
 
 // Force dynamic rendering since we are fetching data from DB that might change
 export const dynamic = 'force-dynamic';
@@ -94,6 +95,9 @@ export default async function Home() {
           </motion.div>
         </div>
       </motion.section>
+
+      {/* Logos Slideshow Section */}
+      <LogoCarousel />
 
       {/* Latest News Section */}
       <section className="w-full py-12 md:py-24 lg:py-32">
