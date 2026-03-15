@@ -5,18 +5,32 @@ import Image from 'next/image';
 const goldenSponsor = { src: '/assets/logos/ladini_big.png', alt: 'Ladini - Χρυσός Χορηγός' };
 
 const logos = [
+  { src: '/assets/logos/aluminium.jpg', alt: 'Aluminium' },
+  { src: '/assets/logos/aulitoukostga.jpg', alt: 'Aulitoukostga' },
   { src: '/assets/logos/euthumis.png', alt: 'Euthumis' },
+  { src: '/assets/logos/kakoulidis.png', alt: 'Kakoulidis' },
+  { src: '/assets/logos/kotopoulamelikioti.jpg', alt: 'Kotopoula Melikioti' },
+  { src: '/assets/logos/ladini_big.png', alt: 'Ladini' },
   { src: '/assets/logos/golis.png', alt: 'Golis' },
-  { src: '/assets/logos/matzilas.png', alt: 'Matzilas' },
+  // { src: '/assets/logos/matzilas.png', alt: 'Matzilas' },
+  { src: '/assets/logos/matzilas-geoponos.png', alt: 'Matzilas' },
   { src: '/assets/logos/nezir.png', alt: 'Nezir' },
-  { src: '/assets/logos/sidiropoulos.png', alt: 'Sidiropoulos' },
+  { src: '/assets/logos/parrots.jpg', alt: 'Parrots' },
+  { src: '/assets/logos/plakaki.jpg', alt: 'Plakaki' },
+  { src: '/assets/logos/sidiropoulos.jpg', alt: 'Sidiropoulos' },
   { src: '/assets/logos/tzaferis.png', alt: 'Tzaferis' },
+  { src: '/assets/logos/voice.jpg', alt: 'Voice' },
 ];
 
 export function LogoCarousel() {
+  // Split logos into two arrays for two rows
+  const topLogos = logos.slice(0, 7);
+  const bottomLogos = logos.slice(7);
+
   // We duplicate the logos array multiple times to ensure a seamless loop.
   // The container will translate by -50%, so exactly half of the total items need to represent an integer number of the original list.
-  const duplicatedLogos = [...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos];
+  const duplicatedTopLogos = [...topLogos, ...topLogos, ...topLogos, ...topLogos, ...topLogos, ...topLogos, ...topLogos, ...topLogos];
+  const duplicatedBottomLogos = [...bottomLogos, ...bottomLogos, ...bottomLogos, ...bottomLogos, ...bottomLogos, ...bottomLogos, ...bottomLogos, ...bottomLogos];
 
   return (
     <section className="w-full py-12 md:py-16 overflow-hidden bg-background border-y border-border/50">
@@ -42,24 +56,43 @@ export function LogoCarousel() {
           </div>
         </div>
       </div>
-      
+
       {/* Wrapper with gradient fade effect on both sides */}
-      <div className="relative flex overflow-hidden group w-full before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-[15%] before:max-w-32 before:bg-gradient-to-r before:from-background before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-[15%] after:max-w-32 after:bg-gradient-to-l after:from-background after:to-transparent pt-4 pb-4 border-t border-border/30 mt-6 shadow-sm">
-        
+      <div className="relative flex flex-col gap-8 md:gap-12 overflow-hidden group w-full before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-[15%] before:max-w-32 before:bg-gradient-to-r before:from-background before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-[15%] after:max-w-32 after:bg-gradient-to-l after:from-background after:to-transparent pt-4 pb-4 border-t border-border/30 mt-6 shadow-sm">
+
+        {/* Top Row - Moves Left */}
         <div className="animate-marquee flex w-max items-center gap-12 md:gap-24 px-6 md:px-12 hover:[animation-play-state:paused]">
-          {duplicatedLogos.map((logo, index) => (
-             <div 
-               key={index} 
-               className="relative w-32 h-16 md:w-48 md:h-24 transition-all duration-300 transform hover:scale-105"
-             >
-               <Image
-                 src={logo.src}
-                 alt={logo.alt}
-                 fill
-                 className="object-contain"
-                 sizes="(max-width: 768px) 128px, 192px"
-               />
-             </div>
+          {duplicatedTopLogos.map((logo, index) => (
+            <div
+              key={`top-${index}`}
+              className="relative w-32 h-16 md:w-48 md:h-24 transition-all duration-300 transform hover:scale-105"
+            >
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 128px, 192px"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Row - Moves Right */}
+        <div className="animate-marquee-reverse flex w-max items-center gap-12 md:gap-24 px-6 md:px-12 hover:[animation-play-state:paused]">
+          {duplicatedBottomLogos.map((logo, index) => (
+            <div
+              key={`bottom-${index}`}
+              className="relative w-32 h-16 md:w-48 md:h-24 transition-all duration-300 transform hover:scale-105"
+            >
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 128px, 192px"
+              />
+            </div>
           ))}
         </div>
       </div>
@@ -69,8 +102,15 @@ export function LogoCarousel() {
           0% { transform: translateX(0%); }
           100% { transform: translateX(-50%); }
         }
+        @keyframes marquee-reverse {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0%); }
+        }
         .animate-marquee {
-          animation: marquee 45s linear infinite;
+          animation: marquee 80s linear infinite;
+        }
+        .animate-marquee-reverse {
+          animation: marquee-reverse 80s linear infinite;
         }
       `}</style>
     </section>
