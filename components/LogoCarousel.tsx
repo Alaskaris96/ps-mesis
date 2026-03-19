@@ -2,7 +2,8 @@
 
 import Image from 'next/image';
 
-const goldenSponsor = { src: '/assets/logos/ladini_big.png', alt: 'Ladini - Χρυσός Χορηγός' };
+const goldenSponsor1 = { src: '/assets/logos/ladini_big.png', alt: 'Ladini - Χρυσός Χορηγός' };
+const goldenSponsor2 = { src: '/assets/logos/tzaferis.png', alt: 'Tzaferis - Χρυσός Χορηγός' }
 
 const logos = [
   { src: '/assets/logos/aluminium.jpg', alt: 'Aluminium' },
@@ -16,6 +17,7 @@ const logos = [
   { src: '/assets/logos/nezir.png', alt: 'Nezir' },
   { src: '/assets/logos/parrots.jpg', alt: 'Parrots' },
   { src: '/assets/logos/fytoria.png', alt: 'Fytoria' },
+  { src: '/assets/logos/georgika-mixanimata-agrifa.png', alt: 'Fotopoulos' },
   { src: '/assets/logos/mr-tony.png', alt: 'Mr-Tony' },
   { src: '/assets/logos/plakaki.jpg', alt: 'Plakaki' },
   { src: '/assets/logos/sidiropoulos.jpg', alt: 'Sidiropoulos' },
@@ -43,17 +45,29 @@ export function LogoCarousel() {
         {/* Golden Sponsor Section */}
         <div className="mb-10 flex flex-col items-center">
           <h3 className="text-lg md:text-xl font-medium text-muted-foreground mb-6 uppercase tracking-widest">
-            Χρυσός Χορηγός
+            Χρυσοί Χορηγοί
           </h3>
-          <div className="relative w-56 h-28 md:w-72 md:h-36 transition-transform duration-300 hover:scale-105">
-            <Image
-              src={goldenSponsor.src}
-              alt={goldenSponsor.alt}
-              fill
-              className="object-contain drop-shadow-md"
-              sizes="(max-width: 768px) 224px, 288px"
-              priority
-            />
+          <div className="flex flex-row flex-wrap justify-center gap-8 md:gap-12 transition-transform duration-300 hover:scale-105">
+            <div className="relative w-48 h-24 md:w-72 md:h-36">
+              <Image
+                src={goldenSponsor1.src}
+                alt={goldenSponsor1.alt}
+                fill
+                className="object-contain drop-shadow-md"
+                sizes="(max-width: 768px) 192px, 288px"
+                priority
+              />
+            </div>
+            <div className="relative w-48 h-24 md:w-72 md:h-36">
+              <Image
+                src={goldenSponsor2.src}
+                alt={goldenSponsor2.alt}
+                fill
+                className="object-contain drop-shadow-md"
+                sizes="(max-width: 768px) 192px, 288px"
+                priority
+              />
+            </div>
           </div>
         </div>
       </div>
