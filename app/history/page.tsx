@@ -18,28 +18,28 @@ const timelineData: TimelineEvent[] = [
         era: 'Αγώνας & Αντίσταση',
         title: 'Προπύργιο Ηρωισμού',
         description: 'Από τον Μακεδονικό Αγώνα (1904-1908) ως καταφύγιο και σημείο ανεφοδιασμού μέσω του Βάλτου των Γιαννιτσών, μέχρι την ενεργή δράση κατά τη Γερμανική Κατοχή, η Μέση παρέμεινε πάντα ένα οχυρό ενότητας και θάρρους σε κάθε εθνική δοκιμασία.',
-        image: '/macedonian_history.png',
+        image: '/assets/history/propurgio.png',
     },
     {
         year: '1922 - 1925',
         era: 'Προσφυγική Σμίξη',
         title: 'Το Μωσαϊκό της Αναγέννησης',
         description: 'Η έλευση προσφύγων από την Ανατολική Θράκη, τον Πόντο, τη Μικρά Ασία και τον Καύκασο σφράγισε την ταυτότητα του χωριού. Ενωμένοι με τους ντόπιους Ρουμλουκιώτες, μετέτρεψαν το παλιό οθωμανικό τσιφλίκι σε μια δυναμική και πολυπολιτισμική ελληνική κοινότητα.',
-        image: 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?q=80&w=2000&auto=format&fit=crop',
+        image: '/assets/history/prosfuges.png',
     },
     {
         year: 'Μέσα 20ού Αιώνα',
         era: 'Η Μετακίνηση',
         title: 'Η Μάχη με τον Αλιάκμονα',
         description: 'Λόγω των καταστροφικών πλημμυρών του Αλιάκμονα στην παλιά τοποθεσία (Μέση Άμμος), οι κάτοικοι πήραν τη γενναία απόφαση να «σηκώσουν» ολόκληρο το χωριό. Με απίστευτη εργατικότητα, έχτισαν τα πάντα από την αρχή στη σημερινή ασφαλή θέση, μακριά από τον κίνδυνο του ποταμού.',
-        image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop',
+        image: '/assets/history/aliakmwn.png',
     },
     {
         year: 'Σήμερα',
         era: 'Παραγωγή & Τουρισμός',
         title: 'Η Ροζ Θάλασσα της Ημαθίας',
         description: 'Σήμερα, η Μέση είναι η «ατμομηχανή» της παραγωγής ροδάκινων και ακτινιδίων στην Ημαθία. Κάθε Μάρτιο, το μοναδικό φαινόμενο των ανθισμένων ροδακινιών μεταμορφώνει τον κάμπο σε μια απέραντη ροζ θάλασσα, προσελκύοντας χιλιάδες επισκέπτες.',
-        image: 'https://images.unsplash.com/photo-1521483756775-c37af386fce9?q=80&w=2000&auto=format&fit=crop',
+        image: '/assets/history/rodakinies.png',
     },
 ];
 
@@ -69,7 +69,7 @@ export default function HistoryPage() {
             <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-black/50 z-10" />
                 <Image
-                    src="https://images.unsplash.com/photo-1521483756775-c37af386fce9?q=80&w=2000&auto=format&fit=crop"
+                    src="/assets/history/rodakinies.png"
                     alt="Ιστορία της Μέσης"
                     fill
                     className="object-cover"
