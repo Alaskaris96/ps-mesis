@@ -16,6 +16,8 @@ const logos = [
   { src: '/assets/logos/matzilas-geoponos.png', alt: 'Matzilas' },
   { src: '/assets/logos/nezir.png', alt: 'Nezir' },
   { src: '/assets/logos/parrots.jpg', alt: 'Parrots' },
+  { src: '/assets/logos/dryas.jpg', alt: 'Dryas' },
+  { src: '/assets/logos/messi.png', alt: 'Messicoop' },
   { src: '/assets/logos/fytoria.png', alt: 'Fytoria' },
   { src: '/assets/logos/georgika-mixanimata-agrifa.png', alt: 'Fotopoulos' },
   { src: '/assets/logos/mr-tony.png', alt: 'Mr-Tony' },
