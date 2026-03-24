@@ -39,7 +39,7 @@ export function LogoCarousel() {
 
   return (
     <section className="w-full py-12 md:py-16 overflow-hidden bg-background border-y border-border/50">
-      <div className="container px-4 md:px-6 mx-auto text-center mb-10">
+      <div className="container px-4 md:px-6 mx-auto text-center mb-12">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-serif text-[var(--primary)] mb-12">
           Οι Υποστηρικτές μας
         </h2>
@@ -78,7 +78,7 @@ export function LogoCarousel() {
       <div className="relative flex flex-col gap-8 md:gap-12 overflow-hidden group w-full before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-[15%] before:max-w-32 before:bg-gradient-to-r before:from-background before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-[15%] after:max-w-32 after:bg-gradient-to-l after:from-background after:to-transparent pt-4 pb-4 border-t border-border/30 mt-6 shadow-sm">
 
         {/* Top Row - Moves Left */}
-        <div className="animate-marquee flex w-max items-center gap-12 md:gap-24 px-6 md:px-12 hover:[animation-play-state:paused]">
+        <div className="animate-marquee flex w-max items-center gap-12 md:gap-24 px-6 md:px-12">
           {duplicatedTopLogos.map((logo, index) => (
             <div
               key={`top-${index}`}
@@ -96,7 +96,7 @@ export function LogoCarousel() {
         </div>
 
         {/* Bottom Row - Moves Right */}
-        <div className="animate-marquee-reverse flex w-max items-center gap-12 md:gap-24 px-6 md:px-12 hover:[animation-play-state:paused]">
+        <div className="animate-marquee-reverse flex w-max items-center gap-12 md:gap-24 px-6 md:px-12">
           {duplicatedBottomLogos.map((logo, index) => (
             <div
               key={`bottom-${index}`}
@@ -128,6 +128,11 @@ export function LogoCarousel() {
         }
         .animate-marquee-reverse {
           animation: marquee-reverse 80s linear infinite;
+        }
+        /* Pause both animations when hovering any logo */
+        .group:hover .animate-marquee,
+        .group:hover .animate-marquee-reverse {
+          animation-play-state: paused !important;
         }
       `}</style>
     </section>
